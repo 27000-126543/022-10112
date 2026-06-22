@@ -1,0 +1,313 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: 0 $page-padding;
+  padding-bottom: 160rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: $spacing-lg 0;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+}
+
+.warningBanner {
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFE8CC 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: flex-start;
+}
+
+.warningIcon {
+  font-size: 48rpx;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+}
+
+.warningContent {
+  flex: 1;
+}
+
+.warningTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-warning;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.warningText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.6;
+}
+
+.questionSection {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.questionItem {
+  padding: $spacing-md 0;
+  border-bottom: 2rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.questionText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.questionTip {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+  margin-bottom: $spacing-md;
+  line-height: 1.5;
+}
+
+.answerOptions {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.answerOption {
+  flex: 1;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $color-bg-light;
+  border: 2rpx solid $color-border-light;
+  border-radius: $radius-button;
+  transition: all $transition-fast;
+
+  &.selectedYes {
+    background: $color-error;
+    border-color: $color-error;
+  }
+
+  &.selectedNo {
+    background: $color-success;
+    border-color: $color-success;
+  }
+}
+
+.answerText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+
+  .selectedYes &,
+  .selectedNo & {
+    color: $color-text-white;
+  }
+}
+
+.riskTag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 12rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  margin-left: $spacing-sm;
+  vertical-align: middle;
+
+  &.high {
+    background: #FFE8E8;
+    color: $color-error;
+  }
+
+  &.medium {
+    background: #FFF4E6;
+    color: $color-warning;
+  }
+
+  &.low {
+    background: #E6FFED;
+    color: $color-success;
+  }
+}
+
+.uploadSection {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.uploadTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.uploadDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.uploadArea {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.uploadItem {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: $radius-lg;
+  background: $color-bg-light;
+  border: 2rpx dashed $color-border;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.uploadIcon {
+  font-size: 48rpx;
+  margin-bottom: $spacing-xs;
+}
+
+.uploadText {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.uploadedImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeButton {
+  position: absolute;
+  top: 4rpx;
+  right: 4rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+}
+
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $spacing-lg $page-padding;
+  padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-lg});
+  background: linear-gradient(180deg, rgba(255, 245, 247, 0) 0%, $color-bg-page 30%);
+  display: flex;
+  gap: $spacing-md;
+}
+
+.prevButton {
+  @include button-reset;
+  height: 96rpx;
+  flex: 0 0 160rpx;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid $color-border;
+}
+
+.prevButtonText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.submitButton {
+  @include button-reset;
+  flex: 1;
+  height: 96rpx;
+  background: $color-primary-gradient;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.3);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+}
+
+.submitButtonText {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.summaryCard {
+  background: linear-gradient(135deg, #FFF5F7 0%, #FFFFFF 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  border: 2rpx solid $color-border-light;
+}
+
+.summaryTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-dark;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.summaryText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.6;
+}

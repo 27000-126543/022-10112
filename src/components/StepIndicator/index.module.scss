@@ -1,0 +1,85 @@
+@use '@/styles/variables.scss' as *;
+
+.stepContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: $spacing-lg 0;
+  position: relative;
+}
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+
+.stepCircle {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+  background: $color-bg-hover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-sm;
+  z-index: 2;
+  transition: all $transition-base;
+
+  &.completed {
+    background: $color-primary;
+  }
+
+  &.current {
+    background: $color-primary-gradient;
+    box-shadow: 0 4rpx 12rpx rgba(255, 107, 157, 0.4);
+  }
+}
+
+.stepNumber {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-tertiary;
+
+  .current & {
+    color: $color-text-white;
+  }
+
+  .completed & {
+    color: $color-text-white;
+  }
+}
+
+.checkIcon {
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+}
+
+.stepLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  text-align: center;
+  max-width: 100rpx;
+
+  &.activeLabel {
+    color: $color-text-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.stepLine {
+  position: absolute;
+  top: 28rpx;
+  left: calc(50% + 40rpx);
+  right: calc(-50% + 40rpx);
+  height: 4rpx;
+  background: $color-border;
+  z-index: 1;
+
+  &.lineCompleted {
+    background: $color-primary;
+  }
+}

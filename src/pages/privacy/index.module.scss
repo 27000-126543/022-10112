@@ -1,0 +1,190 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: 0 $page-padding;
+  padding-bottom: 140rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: $spacing-xl 0;
+  text-align: center;
+}
+
+.headerIcon {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.headerTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.headerDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+}
+
+.privacyCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.cardTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.privacyContent {
+  max-height: 600rpx;
+  overflow-y: auto;
+  background: $color-bg-light;
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.8;
+}
+
+.sectionTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-top: $spacing-md;
+  margin-bottom: $spacing-xs;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.sectionText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: 1.8;
+  margin-bottom: $spacing-sm;
+}
+
+.agreementSection {
+  margin-top: $spacing-lg;
+}
+
+.agreementItem {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-md 0;
+  border-bottom: 2rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.checkbox {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  border: 2rpx solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: $spacing-md;
+  margin-top: 2rpx;
+  transition: all $transition-fast;
+  background: $color-bg-card;
+
+  &.checked {
+    background: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.checkIcon {
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+}
+
+.agreementText {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  line-height: 1.6;
+
+  .highlight {
+    color: $color-primary;
+  }
+}
+
+.bottomSection {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $spacing-lg $page-padding;
+  padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-lg});
+  background: linear-gradient(180deg, rgba(255, 245, 247, 0) 0%, $color-bg-page 30%);
+  display: flex;
+  gap: $spacing-md;
+}
+
+.backButton {
+  @include button-reset;
+  height: 96rpx;
+  flex: 0 0 160rpx;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid $color-border;
+}
+
+.backButtonText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.confirmButton {
+  @include button-reset;
+  flex: 1;
+  height: 96rpx;
+  background: $color-primary-gradient;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.3);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.confirmButtonText {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}

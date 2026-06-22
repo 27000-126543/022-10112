@@ -1,0 +1,341 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFE6EC 0%, #FFF5F7 30%);
+  padding: 0 $page-padding;
+  padding-bottom: 120rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: $spacing-xl 0;
+  text-align: center;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+}
+
+.queueCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: 0 8rpx 32rpx rgba(255, 107, 157, 0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8rpx;
+    background: $color-primary-gradient;
+  }
+}
+
+.queueNumberLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.queueNumber {
+  font-size: 88rpx;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  line-height: 1;
+  margin-bottom: $spacing-md;
+  display: block;
+  letter-spacing: 4rpx;
+}
+
+.queueStatus {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-lg;
+  background: $color-bg-light;
+  border-radius: $radius-button;
+
+  &.waiting {
+    background: #FFF4E6;
+    color: $color-warning;
+  }
+
+  &.called {
+    background: #E6FFED;
+    color: $color-success;
+  }
+}
+
+.statusText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.waitInfo {
+  display: flex;
+  justify-content: space-around;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: 2rpx dashed $color-border;
+}
+
+.waitItem {
+  text-align: center;
+}
+
+.waitValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.waitLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+}
+
+.consultantCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+  background: $color-bg-light;
+}
+
+.consultantInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.consultantName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.consultantTitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.consultantSpecialty {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+}
+
+.callButton {
+  @include button-reset;
+  height: 64rpx;
+  padding: 0 $spacing-md;
+  background: $color-bg-light;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  flex-shrink: 0;
+}
+
+.callButtonText {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.roomCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.roomHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.roomIcon {
+  font-size: 36rpx;
+  margin-right: $spacing-sm;
+}
+
+.roomTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.roomInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md;
+  background: $color-bg-light;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-md;
+}
+
+.roomNumber {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+}
+
+.roomFloor {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.navButton {
+  @include button-reset;
+  width: 100%;
+  height: 80rpx;
+  background: $color-primary-gradient;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.3);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+}
+
+.navButtonText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+.riskWarning {
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFFFFF 100%);
+  border: 2rpx solid #FFE0B2;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.riskHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+}
+
+.riskIcon {
+  font-size: 36rpx;
+  margin-right: $spacing-sm;
+}
+
+.riskTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-warning;
+}
+
+.riskDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.6;
+  margin-bottom: $spacing-md;
+}
+
+.riskButton {
+  @include button-reset;
+  height: 72rpx;
+  padding: 0 $spacing-lg;
+  background: $color-warning;
+  border-radius: $radius-button;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.riskButtonText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-white;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 120rpx 0;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  display: block;
+  margin-bottom: $spacing-lg;
+}
+
+.emptyTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.emptyDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  display: block;
+  margin-bottom: $spacing-xl;
+}
+
+.startButton {
+  display: inline-flex;
+  height: 80rpx;
+  padding: 0 $spacing-xl;
+  background: $color-primary-gradient;
+  border-radius: $radius-button;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.3);
+}
+
+.startButtonText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}

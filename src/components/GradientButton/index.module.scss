@@ -1,0 +1,79 @@
+@use '@/styles/variables.scss' as *;
+
+.gradientButton {
+  @include button-reset;
+  border-radius: $radius-button;
+  padding: 0 $spacing-xl;
+  transition: all $transition-base;
+  position: relative;
+  overflow: hidden;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+
+  &.small {
+    height: $button-height-sm;
+    padding: 0 $spacing-lg;
+  }
+
+  &.medium {
+    height: $button-height-md;
+    padding: 0 $spacing-xl;
+  }
+
+  &.large {
+    height: $button-height-lg;
+    padding: 0 $spacing-xl;
+  }
+
+  &.block {
+    width: 100%;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &.primary {
+    background: $color-primary-gradient;
+    box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.35);
+  }
+
+  &.outline {
+    background: transparent;
+    border: 2rpx solid $color-primary;
+  }
+
+  &.ghost {
+    background: $color-bg-card;
+    border: 2rpx solid $color-border;
+  }
+}
+
+.buttonText {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+
+  .primary & {
+    color: $color-text-white;
+  }
+
+  .outline & {
+    color: $color-primary;
+  }
+
+  .ghost & {
+    color: $color-text-primary;
+  }
+
+  .small & {
+    font-size: $font-size-sm;
+  }
+
+  .large & {
+    font-size: $font-size-lg;
+  }
+}

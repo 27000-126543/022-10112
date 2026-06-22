@@ -1,0 +1,81 @@
+@use '@/styles/variables.scss' as *;
+
+.optionCard {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  border: 2rpx solid $color-border;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+  position: relative;
+  overflow: hidden;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  &.selected {
+    border-color: $color-primary;
+    background: linear-gradient(135deg, #FFF5F7 0%, #FFFFFF 100%);
+    box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.15);
+  }
+
+  &.outline {
+    background: transparent;
+    border-width: 2rpx;
+  }
+}
+
+.cardIcon {
+  font-size: 48rpx;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+}
+
+.cardContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.cardDescription {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  display: block;
+  line-height: 1.4;
+}
+
+.checkbox {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  border: 2rpx solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: $spacing-md;
+  transition: all $transition-base;
+  background: $color-bg-card;
+
+  &.checked {
+    background: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.checkIcon {
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+}

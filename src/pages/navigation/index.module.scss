@@ -1,0 +1,341 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: 0 $page-padding;
+  padding-bottom: 120rpx;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: $spacing-lg 0;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+}
+
+.roomCard {
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8E53 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  color: $color-text-white;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.3);
+}
+
+.roomLabel {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.roomNumber {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.roomFloor {
+  font-size: $font-size-md;
+  opacity: 0.9;
+  display: block;
+}
+
+.consultantInfo {
+  display: flex;
+  align-items: center;
+  margin-top: $spacing-lg;
+  padding-top: $spacing-lg;
+  border-top: 2rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.consultantAvatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-md;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.consultantName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  display: block;
+}
+
+.consultantTitle {
+  font-size: $font-size-xs;
+  opacity: 0.8;
+  display: block;
+}
+
+.mapSection {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-md;
+}
+
+.mapPlaceholder {
+  height: 360rpx;
+  background: linear-gradient(135deg, #F7F8FA 0%, #E8EAED 100%);
+  border-radius: $radius-lg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.mapIcon {
+  font-size: 64rpx;
+  margin-bottom: $spacing-sm;
+}
+
+.mapText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.mapMarker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  font-size: 48rpx;
+}
+
+.floorList {
+  margin-top: $spacing-lg;
+}
+
+.floorItem {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-md 0;
+  border-bottom: 2rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.active {
+    background: $color-bg-light;
+    margin: 0 -#{$spacing-md};
+    padding: $spacing-md;
+    border-radius: $radius-lg;
+    border-bottom: none;
+    margin-bottom: $spacing-sm;
+  }
+}
+
+.floorTag {
+  width: 80rpx;
+  height: 48rpx;
+  background: $color-bg-light;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+
+  .active & {
+    background: $color-primary;
+  }
+}
+
+.floorTagText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-secondary;
+
+  .active & {
+    color: $color-text-white;
+  }
+}
+
+.floorContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.floorName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: 4rpx;
+
+  .active & {
+    color: $color-primary;
+  }
+}
+
+.floorDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.floorRooms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.roomTag {
+  padding: 4rpx 12rpx;
+  background: $color-bg-light;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+
+  &.targetRoom {
+    background: $color-primary;
+    color: $color-text-white;
+  }
+}
+
+.routeSteps {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.stepItem {
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: $spacing-lg;
+  position: relative;
+
+  &:last-child {
+    padding-bottom: 0;
+
+    .stepLine {
+      display: none;
+    }
+  }
+}
+
+.stepCircle {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  background: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: $spacing-md;
+  z-index: 1;
+}
+
+.stepContent {
+  flex: 1;
+  padding-top: 4rpx;
+}
+
+.stepText {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  line-height: 1.6;
+  display: block;
+}
+
+.stepTip {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+  margin-top: $spacing-xs;
+}
+
+.stepLine {
+  position: absolute;
+  left: 18rpx;
+  top: 40rpx;
+  bottom: 0;
+  width: 4rpx;
+  background: $color-border-light;
+}
+
+.callSection {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $spacing-lg $page-padding;
+  padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-lg});
+  background: $color-bg-card;
+  display: flex;
+  gap: $spacing-md;
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.callButton {
+  @include button-reset;
+  flex: 1;
+  height: 88rpx;
+  background: $color-bg-light;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  border: 2rpx solid $color-border-light;
+}
+
+.callButtonText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.guideButton {
+  @include button-reset;
+  flex: 1;
+  height: 88rpx;
+  background: $color-primary-gradient;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.3);
+}
+
+.guideButtonText {
+  font-size: $font-size-md;
+  color: $color-text-white;
+  font-weight: $font-weight-semibold;
+}

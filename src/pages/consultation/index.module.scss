@@ -1,0 +1,392 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: 0 $page-padding;
+  padding-bottom: 160rpx;
+  box-sizing: border-box;
+}
+
+.stepHeader {
+  padding: $spacing-lg 0;
+}
+
+.stepTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.stepDesc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+}
+
+.stepIndicator {
+  margin-bottom: $spacing-lg;
+}
+
+/* 步骤1：基础信息 */
+.formCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.formItem {
+  margin-bottom: $spacing-lg;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.formLabel {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.formInput {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 $spacing-md;
+  background: $color-bg-light;
+  border: 2rpx solid $color-border-light;
+  border-radius: $radius-lg;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  box-sizing: border-box;
+
+  &.focused {
+    border-color: $color-primary;
+    background: $color-bg-card;
+  }
+}
+
+.genderOptions {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.genderOption {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $color-bg-light;
+  border: 2rpx solid $color-border-light;
+  border-radius: $radius-lg;
+  transition: all $transition-fast;
+
+  &.selected {
+    background: linear-gradient(135deg, #FFF5F7 0%, #FFFFFF 100%);
+    border-color: $color-primary;
+  }
+}
+
+.genderText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+
+  .selected & {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+/* 步骤2：关注问题选择 */
+.optionsList {
+  margin-bottom: $spacing-md;
+}
+
+.optionCard {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  border: 2rpx solid $color-border;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  &.selected {
+    border-color: $color-primary;
+    background: linear-gradient(135deg, #FFF5F7 0%, #FFFFFF 100%);
+    box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.15);
+  }
+}
+
+.optionIcon {
+  font-size: 48rpx;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+}
+
+.optionContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.optionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.optionDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+}
+
+.optionCheck {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  border: 2rpx solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: $spacing-md;
+  background: $color-bg-card;
+
+  .selected & {
+    background: $color-primary;
+    border-color: $color-primary;
+  }
+}
+
+.checkIcon {
+  color: $color-text-white;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+}
+
+.selectedCount {
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  padding: $spacing-sm 0;
+}
+
+.countHighlight {
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+/* 步骤4：部位选择 */
+.faceDiagram {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-card;
+  text-align: center;
+}
+
+.faceImage {
+  width: 300rpx;
+  height: 360rpx;
+  margin: 0 auto $spacing-lg;
+  position: relative;
+}
+
+.faceIcon {
+  font-size: 200rpx;
+  line-height: 1;
+}
+
+.areaTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  justify-content: center;
+  margin-bottom: $spacing-md;
+}
+
+.areaTag {
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-light;
+  border: 2rpx solid $color-border-light;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  transition: all $transition-fast;
+
+  &.selected {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-text-white;
+  }
+}
+
+/* 底部操作栏 */
+.bottomBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $spacing-lg $page-padding;
+  padding-bottom: calc(env(safe-area-inset-bottom) + #{$spacing-lg});
+  background: linear-gradient(180deg, rgba(255, 245, 247, 0) 0%, $color-bg-page 30%);
+  display: flex;
+  gap: $spacing-md;
+}
+
+.prevButton {
+  @include button-reset;
+  height: 96rpx;
+  flex: 0 0 160rpx;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid $color-border;
+}
+
+.prevButtonText {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+}
+
+.nextButton {
+  @include button-reset;
+  flex: 1;
+  height: 96rpx;
+  background: $color-primary-gradient;
+  border-radius: $radius-button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.3);
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.nextButtonText {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-white;
+}
+
+/* 问题引导语 */
+.questionCard {
+  background: linear-gradient(135deg, #FFF5F7 0%, #FFFFFF 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  border: 2rpx solid $color-border-light;
+}
+
+.questionIcon {
+  font-size: 36rpx;
+  margin-right: $spacing-sm;
+}
+
+.questionText {
+  font-size: $font-size-md;
+  color: $color-primary-dark;
+  font-weight: $font-weight-medium;
+  line-height: 1.6;
+}
+
+/* 预算选择 */
+.budgetOptions {
+  margin-bottom: $spacing-md;
+}
+
+.budgetCard {
+  display: flex;
+  align-items: center;
+  padding: $spacing-lg;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  border: 2rpx solid $color-border;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.selected {
+    border-color: $color-primary;
+    background: linear-gradient(135deg, #FFF5F7 0%, #FFFFFF 100%);
+  }
+}
+
+.budgetIcon {
+  font-size: 40rpx;
+  margin-right: $spacing-md;
+}
+
+.budgetContent {
+  flex: 1;
+}
+
+.budgetAmount {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.budgetDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+}
+
+.budgetRadio {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  border: 2rpx solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: $color-bg-card;
+
+  .selected & {
+    border-color: $color-primary;
+
+    &::after {
+      content: '';
+      width: 20rpx;
+      height: 20rpx;
+      border-radius: $radius-round;
+      background: $color-primary;
+    }
+  }
+}
