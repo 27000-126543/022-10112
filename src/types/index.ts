@@ -23,16 +23,28 @@ export interface ConsultationData {
   uploadFiles: string[]
 }
 
+export type QueueStatus =
+  | 'nurse_pending'
+  | 'nurse_rejected'
+  | 'waiting'
+  | 'almost'
+  | 'called'
+  | 'consulting'
+  | 'done'
+
 export interface QueueInfo {
   queueNumber: string
   waitTime: number
+  aheadCount: number
   consultantName: string
   consultantAvatar: string
   roomNumber: string
   floor: string
-  status: 'waiting' | 'called' | 'consulting' | 'done'
+  status: QueueStatus
   needNurseReview: boolean
   estimatedTime: string
+  nurseReviewResult?: 'pending' | 'approved' | 'postponed'
+  nurseNote?: string
 }
 
 export interface OptionItem {
@@ -46,4 +58,17 @@ export interface StepItem {
   id: number
   title: string
   status: 'pending' | 'current' | 'completed'
+}
+
+export interface MapPoint {
+  id: string
+  label: string
+  type: 'current' | 'target' | 'elevator' | 'stairs' | 'room' | 'lobby'
+  x: number
+  y: number
+}
+
+export interface FloorMap {
+  floor: string
+  points: MapPoint[]
 }

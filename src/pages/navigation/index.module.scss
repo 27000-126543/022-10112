@@ -99,127 +99,237 @@
   margin-bottom: $spacing-md;
 }
 
-.mapPlaceholder {
-  height: 360rpx;
-  background: linear-gradient(135deg, #F7F8FA 0%, #E8EAED 100%);
-  border-radius: $radius-lg;
+.floorTabs {
   display: flex;
-  flex-direction: column;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+  overflow-x: auto;
+}
+
+.floorTab {
+  display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6rpx;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-light;
+  border-radius: $radius-md;
+  flex-shrink: 0;
+  border: 2rpx solid transparent;
+  transition: all 0.2s ease;
+
+  &.floorTabActive {
+    background: rgba(255, 107, 157, 0.1);
+    border-color: $color-primary;
+  }
+
+  &.floorTabTarget {
+    position: relative;
+  }
+}
+
+.floorTabText {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+
+  .floorTabActive & {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.floorTabBadge {
+  font-size: 20rpx;
+  padding: 2rpx 8rpx;
+  background: $color-primary;
+  color: $color-text-white;
+  border-radius: $radius-xs;
+}
+
+.floorMapContainer {
+  background: linear-gradient(135deg, #F7F8FA 0%, #EEF0F3 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+}
+
+.floorMapHeader {
+  display: flex;
+  align-items: baseline;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-md;
+}
+
+.floorMapTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.floorMapDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.floorMapCanvas {
   position: relative;
+  height: 360rpx;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  border: 2rpx solid $color-border-light;
   overflow: hidden;
 }
 
-.mapIcon {
-  font-size: 64rpx;
-  margin-bottom: $spacing-sm;
-}
-
-.mapText {
-  font-size: $font-size-sm;
-  color: $color-text-tertiary;
-}
-
-.mapMarker {
+.mapGridBg {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -100%);
-  font-size: 48rpx;
+  inset: 0;
+  overflow: hidden;
 }
 
-.floorList {
-  margin-top: $spacing-lg;
+.gridHLine,
+.gridVLine {
+  position: absolute;
+  background: $color-border-light;
 }
 
-.floorItem {
+.gridHLine {
+  left: 0;
+  right: 0;
+  height: 2rpx;
+}
+
+.gridVLine {
+  top: 0;
+  bottom: 0;
+  width: 2rpx;
+}
+
+.mapPoint {
+  position: absolute;
+  transform: translate(-50%, -50%);
   display: flex;
-  align-items: flex-start;
-  padding: $spacing-md 0;
-  border-bottom: 2rpx solid $color-divider;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  &.active {
-    background: $color-bg-light;
-    margin: 0 -#{$spacing-md};
-    padding: $spacing-md;
-    border-radius: $radius-lg;
-    border-bottom: none;
-    margin-bottom: $spacing-sm;
-  }
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
 }
 
-.floorTag {
-  width: 80rpx;
-  height: 48rpx;
-  background: $color-bg-light;
-  border-radius: $radius-md;
+.mapPointMarker {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: $spacing-md;
-  flex-shrink: 0;
-
-  .active & {
-    background: $color-primary;
-  }
+  background: $color-bg-card;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.12);
+  border: 2rpx solid $color-border-light;
 }
 
-.floorTagText {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
+.mapPointIcon {
+  font-size: 28rpx;
+}
+
+.mapPointLabel {
+  margin-top: 6rpx;
+  font-size: 20rpx;
   color: $color-text-secondary;
+  white-space: nowrap;
+  background: $color-bg-card;
+  padding: 2rpx 8rpx;
+  border-radius: $radius-xs;
+}
 
-  .active & {
-    color: $color-text-white;
+.point-current {
+  .mapPointMarker {
+    background: #E6F7FF;
+    border-color: #1890FF;
+    box-shadow: 0 4rpx 12rpx rgba(24, 144, 255, 0.3);
+  }
+  .mapPointLabel {
+    color: #1890FF;
+    font-weight: $font-weight-semibold;
   }
 }
 
-.floorContent {
-  flex: 1;
-  min-width: 0;
-}
-
-.floorName {
-  font-size: $font-size-md;
-  font-weight: $font-weight-medium;
-  color: $color-text-primary;
-  display: block;
-  margin-bottom: 4rpx;
-
-  .active & {
+.point-target {
+  .mapPointMarker {
+    background: #FFF1F0;
+    border-color: $color-primary;
+    box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.4);
+    animation: pulseTarget 1.8s infinite;
+  }
+  .mapPointLabel {
     color: $color-primary;
+    font-weight: $font-weight-bold;
   }
 }
 
-.floorDesc {
-  font-size: $font-size-xs;
-  color: $color-text-tertiary;
-  display: block;
-  margin-bottom: $spacing-xs;
+@keyframes pulseTarget {
+  0%, 100% {
+    box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.4);
+  }
+  50% {
+    box-shadow: 0 4rpx 24rpx rgba(255, 107, 157, 0.6);
+  }
 }
 
-.floorRooms {
+.point-elevator {
+  .mapPointMarker {
+    background: #F6FFED;
+    border-color: #52C41A;
+  }
+  .mapPointLabel {
+    color: #52C41A;
+  }
+}
+
+.point-stairs {
+  .mapPointMarker {
+    background: #FFF7E6;
+    border-color: #FA8C16;
+  }
+  .mapPointLabel {
+    color: #FA8C16;
+  }
+}
+
+.mapPathLine {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  z-index: 3;
+}
+
+.pathArrow {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba(255, 107, 157, 0.1);
+  border-radius: $radius-md;
+}
+
+.mapLegend {
   display: flex;
   flex-wrap: wrap;
-  gap: $spacing-xs;
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+  padding-top: $spacing-md;
+  border-top: 2rpx solid $color-divider;
 }
 
-.roomTag {
-  padding: 4rpx 12rpx;
-  background: $color-bg-light;
-  border-radius: $radius-xs;
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.legendIcon {
+  font-size: 28rpx;
+}
+
+.legendText {
   font-size: $font-size-xs;
   color: $color-text-secondary;
-
-  &.targetRoom {
-    background: $color-primary;
-    color: $color-text-white;
-  }
 }
 
 .routeSteps {

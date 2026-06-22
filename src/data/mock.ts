@@ -1,4 +1,4 @@
-import { OptionItem, QueueInfo } from '@/types'
+import { OptionItem, QueueInfo, MapPoint, FloorMap } from '@/types'
 
 export const concernOptions: OptionItem[] = [
   { id: 'acne', label: '痘痘痘印', description: '想改善痘痘、痘印、痘坑问题' },
@@ -139,6 +139,7 @@ export const generateQueueInfo = (needNurseReview: boolean = false): QueueInfo =
   const queueNumber = `${prefix}${number}`
 
   const waitTime = Math.floor(Math.random() * 30) + 10
+  const aheadCount = Math.floor(Math.random() * 8) + 2
 
   const consultant = consultants[Math.floor(Math.random() * consultants.length)]
 
@@ -151,13 +152,15 @@ export const generateQueueInfo = (needNurseReview: boolean = false): QueueInfo =
   return {
     queueNumber,
     waitTime,
+    aheadCount,
     consultantName: consultant.name,
     consultantAvatar: consultant.avatar,
     roomNumber: room.number,
     floor: room.floor,
-    status: 'waiting',
+    status: needNurseReview ? 'nurse_pending' : 'waiting',
     needNurseReview,
-    estimatedTime
+    estimatedTime,
+    nurseReviewResult: needNurseReview ? 'pending' : undefined
   }
 }
 
@@ -183,3 +186,58 @@ export const navigationFloors = [
     rooms: ['402诊室', '手术室1', '手术室2', '恢复室']
   }
 ]
+
+export const getFloorMap = (targetFloor: string, targetRoom: string): FloorMap => {
+  const floorNum = parseInt(targetFloor)
+  const roomIdx = parseInt(targetRoom.replace(/\D/g, ''))
+
+  let points: MapPoint[] = []
+
+  if (floorNum === 1) {
+    points = [
+      { id: 'lobby', label: '您的位置', type: 'current', x: 12, y: 50 },
+      { id: 'reception', label: '前台', type: 'lobby', x: 28, y: 50 },
+      { id: 'elevator', label: '电梯', type: 'elevator', x: 58, y: 50 },
+      { id: 'stairs', label: '楼梯', type: 'stairs', x: 72, y: 50 },
+      { id: 'rest', label: '休息区', type: 'lobby', x: 88, y: 32 }
+    ]
+  } else if (floorNum === 2) {
+    points = [
+      { id: 'elevator', label: '电梯口', type: 'elevator', x: 12, y: 50 },
+      { id: 'stairs', label: '楼梯', type: 'stairs', x: 26, y: 50 },
+      { id: 'r201', label: '201诊室', type: 'room', x: 48, y: 28 },
+      { id: 'skin', label: '皮肤检测', type: 'lobby', x: 62, y: 28 },
+      { id: 'care', label: '护理室', type: 'lobby', x: 76, y: 28 },
+      { id: 'r203', label: '203诊室', type: 'room', x: 48, y: 72 },
+      { id: 'photon', label: '光子治疗', type: 'lobby', x: 68, y: 72 }
+    ]
+  } else if (floorNum === 3) {
+    points = [
+      { id: 'elevator', label: '电梯口', type: 'elevator', x: 12, y: 50 },
+      { id: 'stairs', label: '楼梯', type: 'stairs', x: 26, y: 50 },
+      { id: 'r301', label: '301诊室', type: 'room', x: 44, y: 28 },
+      { id: 'r302', label: '302诊室', type: 'room', x: 58, y: 28 },
+      { id: 'r303', label: '303诊室', type: 'room', x: 72, y: 28 },
+      { id: 'r305', label: '305诊室', type: 'room', x: 86, y: 28 },
+      { id: 'inject', label: '注射室', type: 'lobby', x: 66, y: 72 }
+    ]
+  } else if (floorNum === 4) {
+    points = [
+      { id: 'elevator', label: '电梯口', type: 'elevator', x: 12, y: 50 },
+      { id: 'stairs', label: '楼梯', type: 'stairs', x: 26, y: 50 },
+      { id: 'r402', label: '402诊室', type: 'room', x: 48, y: 28 },
+      { id: 'op1', label: '手术室1', type: 'lobby', x: 66, y: 28 },
+      { id: 'op2', label: '手术室2', type: 'lobby', x: 82, y: 28 },
+      { id: 'recover', label: '恢复室', type: 'lobby', x: 58, y: 72 }
+    ]
+  }
+
+  points = points.map(p => {
+    if (p.id === `r${roomIdx}`) {
+      return { ...p, type: 'target' as const, label: targetRoom }
+    }
+    return p
+  })
+
+  return { floor: targetFloor, points }
+}

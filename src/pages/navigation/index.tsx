@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import { View, Text, Image, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useConsultationStore } from '@/store/consultation'
-import { navigationFloors, consultants } from '@/data/mock'
+import { navigationFloors, consultants, getFloorMap } from '@/data/mock'
+import { MapPoint } from '@/types'
 import styles from './index.module.scss'
 import classnames from 'classnames'
 
 const NavigationPage: React.FC = () => {
   const { queueInfo } = useConsultationStore()
+  const [viewFloor, setViewFloor] = useState<string>('')
 
   const targetRoom = queueInfo?.roomNumber || '305诊室'
   const targetFloor = queueInfo?.floor || '3楼'
@@ -15,6 +17,9 @@ const NavigationPage: React.FC = () => {
   const estimatedTime = queueInfo?.estimatedTime || '--:--'
 
   const consultant = consultants.find(c => c.name === consultantName) || consultants[0]
+
+  const displayFloor = viewFloor || targetFloor
+  const floorMap = useMemo(() => getFloorMap(displayFloor, targetRoom), [displayFloor, targetRoom])
 
   const handleCallConsultant = () => {
     Taro.showModal({
@@ -84,6 +89,18 @@ const NavigationPage: React.FC = () => {
 
   const routeSteps = generateRouteSteps()
 
+  const getPointIcon = (type: MapPoint['type']) => {
+    switch (type) {
+      case 'current': return '📍'
+      case 'target': return '🎯'
+      case 'elevator': return '🛗'
+      case 'stairs': return '🪜'
+      case 'room': return '🚪'
+      case 'lobby': return '🏷️'
+      default: return '•'
+    }
+  }
+
   if (!queueInfo) {
     return (
       <View className={styles.pageContainer}>
@@ -126,42 +143,86 @@ const NavigationPage: React.FC = () => {
       </View>
 
       <View className={styles.mapSection}>
-        <Text className={styles.sectionTitle}>楼层分布</Text>
-        <View className={styles.mapPlaceholder}>
-          <Text className={styles.mapIcon}>🏢</Text>
-          <Text className={styles.mapText}>目标：{targetFloor} · {targetRoom}</Text>
-          <Text className={styles.mapMarker}>📍</Text>
-        </View>
+        <Text className={styles.sectionTitle}>楼层地图</Text>
 
-        <View className={styles.floorList}>
-          {navigationFloors.map((floor, index) => (
+        <View className={styles.floorTabs}>
+          {navigationFloors.map((floor) => (
             <View
-              key={index}
-              className={classnames(styles.floorItem, {
-                [styles.active]: floor.floor === targetFloor
+              key={floor.floor}
+              className={classnames(styles.floorTab, {
+                [styles.floorTabActive]: displayFloor === floor.floor,
+                [styles.floorTabTarget]: targetFloor === floor.floor
               })}
+              onClick={() => setViewFloor(floor.floor)}
             >
-              <View className={styles.floorTag}>
-                <Text className={styles.floorTagText}>{floor.floor}</Text>
-              </View>
-              <View className={styles.floorContent}>
-                <Text className={styles.floorName}>{floor.floor}</Text>
-                <Text className={styles.floorDesc}>{floor.description}</Text>
-                <View className={styles.floorRooms}>
-                  {floor.rooms.map((room, roomIndex) => (
-                    <Text
-                      key={roomIndex}
-                      className={classnames(styles.roomTag, {
-                        [styles.targetRoom]: room === targetRoom
-                      })}
-                    >
-                      {room}
-                    </Text>
-                  ))}
-                </View>
-              </View>
+              <Text className={styles.floorTabText}>{floor.floor}</Text>
+              {targetFloor === floor.floor && <Text className={styles.floorTabBadge}>目标</Text>}
             </View>
           ))}
+        </View>
+
+        <View className={styles.floorMapContainer}>
+          <View className={styles.floorMapHeader}>
+            <Text className={styles.floorMapTitle}>{displayFloor}平面图</Text>
+            <Text className={styles.floorMapDesc}>
+              {navigationFloors.find(f => f.floor === displayFloor)?.description}
+            </Text>
+          </View>
+
+          <View className={styles.floorMapCanvas}>
+            <View className={styles.mapGridBg}>
+              {[1, 2, 3, 4].map(i => (
+                <View key={`h${i}`} className={styles.gridHLine} style={{ top: `${i * 20}%` }} />
+              ))}
+              {[1, 2, 3, 4].map(i => (
+                <View key={`v${i}`} className={styles.gridVLine} style={{ left: `${i * 20}%` }} />
+              ))}
+            </View>
+
+            {floorMap.points.map((point) => (
+              <View
+                key={point.id}
+                className={classnames(styles.mapPoint, styles[`point-${point.type}`])}
+                style={{
+                  left: `${point.x}%`,
+                  top: `${point.y}%`
+                }}
+              >
+                <View className={styles.mapPointMarker}>
+                  <Text className={styles.mapPointIcon}>{getPointIcon(point.type)}</Text>
+                </View>
+                <Text className={styles.mapPointLabel}>{point.label}</Text>
+              </View>
+            ))}
+
+            <View className={styles.mapPathLine}>
+              {displayFloor === '1楼' && floorNum !== 1 && (
+                <View className={styles.pathArrow}>↑ 乘电梯/楼梯上楼</View>
+              )}
+              {displayFloor !== '1楼' && displayFloor === targetFloor && (
+                <View className={styles.pathArrow}>→ 前往目标诊室</View>
+              )}
+            </View>
+          </View>
+
+          <View className={styles.mapLegend}>
+            <View className={styles.legendItem}>
+              <Text className={styles.legendIcon}>📍</Text>
+              <Text className={styles.legendText}>当前位置</Text>
+            </View>
+            <View className={styles.legendItem}>
+              <Text className={styles.legendIcon}>🎯</Text>
+              <Text className={styles.legendText}>目标诊室</Text>
+            </View>
+            <View className={styles.legendItem}>
+              <Text className={styles.legendIcon}>🛗</Text>
+              <Text className={styles.legendText}>电梯</Text>
+            </View>
+            <View className={styles.legendItem}>
+              <Text className={styles.legendIcon}>🪜</Text>
+              <Text className={styles.legendText}>楼梯</Text>
+            </View>
+          </View>
         </View>
       </View>
 

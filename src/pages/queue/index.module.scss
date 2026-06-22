@@ -27,6 +27,251 @@
   display: block;
 }
 
+/* 护士复核卡片 */
+.nursePendingCard {
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFE8CC 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: 0 8rpx 24rpx rgba(255, 125, 0, 0.15);
+  text-align: center;
+  border: 2rpx solid #FFD699;
+
+  .icon {
+    font-size: 72rpx;
+    display: block;
+    margin-bottom: $spacing-md;
+    animation: pulse 2s infinite;
+  }
+
+  .title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-warning;
+    display: block;
+    margin-bottom: $spacing-sm;
+  }
+
+  .desc {
+    font-size: $font-size-sm;
+    color: #8B5A00;
+    line-height: 1.6;
+    margin-bottom: $spacing-lg;
+    display: block;
+  }
+
+  .actions {
+    display: flex;
+    gap: $spacing-md;
+  }
+
+  .actionBtn {
+    @include button-reset;
+    flex: 1;
+    height: 80rpx;
+    border-radius: $radius-button;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-xs;
+
+    &.call {
+      background: $color-warning;
+    }
+
+    &.test {
+      background: $color-bg-card;
+      border: 2rpx solid #FFD699;
+    }
+  }
+
+  .actionText {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+
+    .call & {
+      color: $color-text-white;
+    }
+
+    .test & {
+      color: $color-warning;
+    }
+  }
+}
+
+/* 暂缓咨询结果 */
+.postponedCard {
+  background: linear-gradient(135deg, #FFE8E8 0%, #FFF0F0 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+  border: 2rpx solid #FFCCCC;
+
+  .icon {
+    font-size: 72rpx;
+    display: block;
+    margin-bottom: $spacing-md;
+  }
+
+  .title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-error;
+    display: block;
+    margin-bottom: $spacing-sm;
+  }
+
+  .desc {
+    font-size: $font-size-sm;
+    color: #8B0000;
+    line-height: 1.6;
+    margin-bottom: $spacing-md;
+    display: block;
+  }
+
+  .note {
+    font-size: $font-size-xs;
+    color: #8B5A5A;
+    background: rgba(255, 255, 255, 0.6);
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-md;
+    display: inline-block;
+  }
+}
+
+/* 叫号提醒横幅 */
+.calledBanner {
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8E53 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.4);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 20rpx,
+      rgba(255, 255, 255, 0.08) 20rpx,
+      rgba(255, 255, 255, 0.08) 40rpx
+    );
+  }
+
+  .icon {
+    font-size: 56rpx;
+    display: block;
+    margin-bottom: $spacing-sm;
+    animation: ring 0.6s infinite;
+  }
+
+  .title {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: $color-text-white;
+    display: block;
+    margin-bottom: $spacing-xs;
+    position: relative;
+  }
+
+  .desc {
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: $spacing-md;
+    display: block;
+    position: relative;
+  }
+
+  .goNavBtn {
+    @include button-reset;
+    height: 80rpx;
+    padding: 0 $spacing-xl;
+    background: $color-text-white;
+    border-radius: $radius-button;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    position: relative;
+  }
+
+  .goNavText {
+    font-size: $font-size-md;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+  }
+}
+
+/* 快到号提醒 */
+.almostBanner {
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFFFFF 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  border: 2rpx solid #FFE066;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    font-size: 48rpx;
+    margin-right: $spacing-md;
+    flex-shrink: 0;
+  }
+
+  .text {
+    flex: 1;
+  }
+
+  .title {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: #996600;
+    display: block;
+    margin-bottom: 4rpx;
+  }
+
+  .desc {
+    font-size: $font-size-xs;
+    color: #B38F00;
+  }
+}
+
+/* 面诊中横幅 */
+.consultingBanner {
+  background: linear-gradient(135deg, #E6FFED 0%, #FFFFFF 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+  border: 2rpx solid #95DE64;
+
+  .icon {
+    font-size: 56rpx;
+    display: block;
+    margin-bottom: $spacing-sm;
+  }
+
+  .title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: #389E0D;
+    display: block;
+    margin-bottom: $spacing-xs;
+  }
+
+  .desc {
+    font-size: $font-size-sm;
+    color: #52C41A;
+  }
+}
+
+/* 候诊主卡片 */
 .queueCard {
   background: $color-bg-card;
   border-radius: $radius-xl;
@@ -77,15 +322,34 @@
     color: $color-warning;
   }
 
+  &.almost {
+    background: #FFF9E6;
+    color: #D48806;
+    animation: pulse 1.5s infinite;
+  }
+
   &.called {
+    background: #FFE6EC;
+    color: $color-primary;
+  }
+
+  &.consulting {
     background: #E6FFED;
-    color: $color-success;
+    color: #389E0D;
   }
 }
 
 .statusText {
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
+}
+
+.statusDot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: $radius-round;
+  background: currentColor;
+  margin-right: $spacing-xs;
 }
 
 .waitInfo {
@@ -98,6 +362,13 @@
 
 .waitItem {
   text-align: center;
+
+  &.highlight {
+    .waitValue {
+      color: $color-primary;
+      font-size: $font-size-xxl;
+    }
+  }
 }
 
 .waitValue {
@@ -240,60 +511,17 @@
     transform: scale(0.96);
     opacity: 0.9;
   }
+
+  &.urgent {
+    height: 88rpx;
+    background: linear-gradient(135deg, #FF8E53 0%, #FF6B9D 100%);
+    animation: pulse 1.2s infinite;
+  }
 }
 
 .navButtonText {
   font-size: $font-size-md;
   font-weight: $font-weight-semibold;
-  color: $color-text-white;
-}
-
-.riskWarning {
-  background: linear-gradient(135deg, #FFF4E6 0%, #FFFFFF 100%);
-  border: 2rpx solid #FFE0B2;
-  border-radius: $radius-xl;
-  padding: $spacing-lg;
-  margin-bottom: $spacing-lg;
-}
-
-.riskHeader {
-  display: flex;
-  align-items: center;
-  margin-bottom: $spacing-sm;
-}
-
-.riskIcon {
-  font-size: 36rpx;
-  margin-right: $spacing-sm;
-}
-
-.riskTitle {
-  font-size: $font-size-md;
-  font-weight: $font-weight-semibold;
-  color: $color-warning;
-}
-
-.riskDesc {
-  font-size: $font-size-sm;
-  color: $color-text-secondary;
-  line-height: 1.6;
-  margin-bottom: $spacing-md;
-}
-
-.riskButton {
-  @include button-reset;
-  height: 72rpx;
-  padding: 0 $spacing-lg;
-  background: $color-warning;
-  border-radius: $radius-button;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.riskButtonText {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-medium;
   color: $color-text-white;
 }
 
@@ -338,4 +566,17 @@
   font-size: $font-size-md;
   font-weight: $font-weight-semibold;
   color: $color-text-white;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes ring {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(15deg); }
+  40% { transform: rotate(-15deg); }
+  60% { transform: rotate(10deg); }
+  80% { transform: rotate(-10deg); }
 }

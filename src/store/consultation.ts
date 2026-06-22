@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { ConsultationData, QueueInfo, UserInfo } from '@/types'
+import { ConsultationData, QueueInfo, UserInfo, QueueStatus } from '@/types'
 
 interface ConsultationState {
   currentStep: number
@@ -16,6 +16,11 @@ interface ConsultationState {
   setPrivacyAgreed: (agreed: boolean) => void
   setIsCheckedIn: (checked: boolean) => void
   setQueueInfo: (info: QueueInfo) => void
+  updateQueueStatus: (status: QueueStatus, extra?: Partial<QueueInfo>) => void
+  setNurseReviewResult: (
+    result: 'pending' | 'approved' | 'postponed',
+    note?: string
+  ) => void
   resetAll: () => void
 }
 
@@ -62,6 +67,35 @@ export const useConsultationStore = create<ConsultationState>((set) => ({
   setPrivacyAgreed: (agreed) => set({ privacyAgreed: agreed }),
   setIsCheckedIn: (checked) => set({ isCheckedIn: checked }),
   setQueueInfo: (info) => set({ queueInfo: info }),
+  updateQueueStatus: (status, extra) => set((state) => {
+    if (!state.queueInfo) return {}
+    return {
+      queueInfo: {
+        ...state.queueInfo,
+        status,
+        ...(extra || {})
+      }
+    }
+  }),
+  setNurseReviewResult: (result, note) => set((state) => {
+    if (!state.queueInfo) return {}
+    let newStatus: QueueStatus = state.queueInfo.status
+    if (result === 'approved') {
+      newStatus = 'waiting'
+    } else if (result === 'postponed') {
+      newStatus = 'nurse_rejected'
+    } else if (result === 'pending') {
+      newStatus = 'nurse_pending'
+    }
+    return {
+      queueInfo: {
+        ...state.queueInfo,
+        status: newStatus,
+        nurseReviewResult: result,
+        nurseNote: note
+      }
+    }
+  }),
   resetAll: () => set({
     currentStep: 0,
     userInfo: initialUserInfo,
