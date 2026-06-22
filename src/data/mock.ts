@@ -1,4 +1,4 @@
-import { OptionItem, QueueInfo, MapPoint, FloorMap } from '@/types'
+import { OptionItem, QueueInfo, MapPoint, FloorMap, BoardCustomer, QueueStatus } from '@/types'
 
 export const concernOptions: OptionItem[] = [
   { id: 'acne', label: '痘痘痘印', description: '想改善痘痘、痘印、痘坑问题' },
@@ -149,6 +149,9 @@ export const generateQueueInfo = (needNurseReview: boolean = false): QueueInfo =
   now.setMinutes(now.getMinutes() + waitTime)
   const estimatedTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
 
+  const checkInNow = new Date()
+  const checkInTime = `${String(checkInNow.getHours()).padStart(2, '0')}:${String(checkInNow.getMinutes()).padStart(2, '0')}`
+
   return {
     queueNumber,
     waitTime,
@@ -160,7 +163,9 @@ export const generateQueueInfo = (needNurseReview: boolean = false): QueueInfo =
     status: needNurseReview ? 'nurse_pending' : 'waiting',
     needNurseReview,
     estimatedTime,
-    nurseReviewResult: needNurseReview ? 'pending' : undefined
+    nurseReviewResult: needNurseReview ? 'pending' : undefined,
+    checkInTime,
+    arriveProgress: 'not_started' as const
   }
 }
 
@@ -240,4 +245,38 @@ export const getFloorMap = (targetFloor: string, targetRoom: string): FloorMap =
   })
 
   return { floor: targetFloor, points }
+}
+
+const mockNames = ['张女士', '李女士', '王女士', '赵女士', '陈女士', '刘女士', '周女士', '吴女士', '郑女士', '孙女士', '林女士', '黄女士']
+const mockStatuses: QueueStatus[] = ['waiting', 'waiting', 'almost', 'called', 'consulting', 'nurse_pending']
+const mockRisks = [['allergy'], ['surgery'], ['disease', 'scar'], [], [], []]
+
+export const generateMockBoardCustomers = (): BoardCustomer[] => {
+  const customers: BoardCustomer[] = []
+  const now = new Date()
+
+  for (let i = 0; i < 10; i++) {
+    const idx = i % mockNames.length
+    const statusIdx = i % mockStatuses.length
+    const status = mockStatuses[statusIdx]
+    const consultant = consultants[i % consultants.length]
+    const room = rooms[i % rooms.length]
+    const checkHour = 8 + Math.floor(i / 3)
+    const checkMin = (i * 17) % 60
+
+    customers.push({
+      id: `cust_${i + 1}`,
+      queueNumber: `${prefixList[i % prefixList.length]}${String(10 + i * 3).padStart(2, '0')}`,
+      name: mockNames[idx],
+      status,
+      consultantName: consultant.name,
+      roomNumber: room.number,
+      floor: room.floor,
+      checkInTime: `${String(checkHour).padStart(2, '0')}:${String(checkMin).padStart(2, '0')}`,
+      riskFlags: status === 'nurse_pending' ? mockRisks[i % mockRisks.length] : [],
+      phone: `138****${String(1000 + i * 7).slice(-4)}`
+    })
+  }
+
+  return customers
 }

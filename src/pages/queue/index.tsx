@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { View, Text, Image, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useConsultationStore } from '@/store/consultation'
-import { generateQueueInfo, consultants } from '@/data/mock'
+import { generateQueueInfo, consultants, generateMockBoardCustomers } from '@/data/mock'
 import { QueueStatus } from '@/types'
 import styles from './index.module.scss'
 import classnames from 'classnames'
@@ -17,36 +17,86 @@ const statusDisplay: Record<QueueStatus, { label: string; icon: string }> = {
   done: { label: '已完成', icon: '✅' }
 }
 
+const riskFlagLabels: Record<string, string> = {
+  pregnant: '怀孕/备孕期',
+  breastfeeding: '哺乳期',
+  allergy: '过敏史',
+  scar: '疤痕体质',
+  disease: '慢性疾病',
+  surgery: '半年内手术史'
+}
+
 const QueuePage: React.FC = () => {
-  const { queueInfo, isCheckedIn, setQueueInfo, consultationData, setNurseReviewResult, updateQueueStatus } = useConsultationStore()
-  const [showDebug, setShowDebug] = useState(false)
+  const {
+    queueInfo,
+    isCheckedIn,
+    setQueueInfo,
+    consultationData,
+    setNurseReviewResult,
+    updateQueueStatus,
+    decrementAheadCount,
+    addBoardCustomer,
+    boardCustomers
+  } = useConsultationStore()
+  const [showNurseDebug, setShowNurseDebug] = useState(false)
 
   const hasRiskFlags = consultationData.riskFlags?.length > 0
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const decrementTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const consultant = queueInfo
     ? consultants.find(c => c.name === queueInfo.consultantName) || consultants[0]
     : consultants[0]
 
   useEffect(() => {
+    if (boardCustomers.length === 0 && __DEV__) {
+      generateMockBoardCustomers().forEach(c => addBoardCustomer(c))
+    }
+  }, [addBoardCustomer, boardCustomers.length])
+
+  useEffect(() => {
     if (!queueInfo) return
 
-    if (queueInfo.status === 'waiting' && queueInfo.aheadCount <= 2) {
-      const timer = setTimeout(() => {
-        updateQueueStatus('almost', { aheadCount: Math.max(1, queueInfo.aheadCount - 1) })
-        console.log('[Queue] 状态变为 almost')
-      }, 8000)
-      return () => clearTimeout(timer)
+    if (timerRef.current) clearTimeout(timerRef.current)
+    if (decrementTimerRef.current) clearInterval(decrementTimerRef.current)
+
+    if (queueInfo.status === 'waiting') {
+      if (queueInfo.aheadCount > 2) {
+        decrementTimerRef.current = setInterval(() => {
+          decrementAheadCount()
+        }, 10000)
+      }
+
+      if (queueInfo.aheadCount <= 2) {
+        timerRef.current = setTimeout(() => {
+          updateQueueStatus('almost', { aheadCount: Math.max(1, queueInfo.aheadCount - 1) })
+          console.log('[Queue] 自动推进: waiting → almost')
+        }, 8000)
+      }
     }
 
     if (queueInfo.status === 'almost') {
-      const timer = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         updateQueueStatus('called', { aheadCount: 0, waitTime: 0 })
-        console.log('[Queue] 状态变为 called')
+        console.log('[Queue] 自动推进: almost → called')
         Taro.vibrateShort && Taro.vibrateShort({ type: 'medium' })
       }, 12000)
-      return () => clearTimeout(timer)
     }
-  }, [queueInfo?.status, queueInfo?.aheadCount, updateQueueStatus])
+
+    if (queueInfo.status === 'called') {
+      timerRef.current = setTimeout(() => {
+        if (queueInfo.arriveProgress === 'at_room') {
+          updateQueueStatus('consulting')
+          console.log('[Queue] 自动推进: called → consulting')
+        }
+      }, 18000)
+    }
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      if (decrementTimerRef.current) clearInterval(decrementTimerRef.current)
+    }
+  }, [queueInfo?.status, queueInfo?.aheadCount, queueInfo?.arriveProgress, updateQueueStatus, decrementAheadCount])
 
   const handleCallConsultant = () => {
     Taro.showModal({
@@ -72,21 +122,6 @@ const QueuePage: React.FC = () => {
     console.log('[Queue] 已请求护士复核')
   }
 
-  const handleNurseApprove = () => {
-    setNurseReviewResult('approved')
-    console.log('[Queue] 护士复核通过，进入候诊')
-    Taro.showToast({ title: '复核通过', icon: 'success' })
-  }
-
-  const handleNursePostpone = () => {
-    setNurseReviewResult(
-      'postponed',
-      '建议先调理身体状况，2周后再来咨询'
-    )
-    console.log('[Queue] 护士建议暂缓咨询')
-    Taro.showToast({ title: '已记录', icon: 'none' })
-  }
-
   const handleSimulateStatus = (status: QueueStatus) => {
     updateQueueStatus(status, {
       aheadCount: status === 'waiting' ? 5 : status === 'almost' ? 2 : 0,
@@ -109,6 +144,29 @@ const QueuePage: React.FC = () => {
     console.log('[Queue] 获取排队信息:', queueData)
   }
 
+  const handleNurseApprove = () => {
+    setNurseReviewResult('approved')
+    console.log('[Queue] 护士复核通过，进入候诊')
+    Taro.showToast({ title: '复核通过', icon: 'success' })
+  }
+
+  const handleNursePostpone = () => {
+    setNurseReviewResult(
+      'postponed',
+      '建议先调理身体状况，2周后再来咨询'
+    )
+    console.log('[Queue] 护士建议暂缓咨询')
+    Taro.showToast({ title: '已记录', icon: 'none' })
+  }
+
+  const handleOpenBoard = () => {
+    Taro.navigateTo({ url: '/pages/board/index' })
+  }
+
+  const handleOpenNurseStation = () => {
+    Taro.navigateTo({ url: '/pages/nurse/index' })
+  }
+
   if (!queueInfo) {
     return (
       <View className={styles.pageContainer}>
@@ -124,6 +182,18 @@ const QueuePage: React.FC = () => {
             </Text>
           </View>
         </View>
+        {__DEV__ && (
+          <View className={styles.devEntryBar}>
+            <View className={styles.devEntryBtn} onClick={handleOpenBoard}>
+              <Text className={styles.devEntryIcon}>📊</Text>
+              <Text className={styles.devEntryText}>导诊看板</Text>
+            </View>
+            <View className={styles.devEntryBtn} onClick={handleOpenNurseStation}>
+              <Text className={styles.devEntryIcon}>👩‍⚕️</Text>
+              <Text className={styles.devEntryText}>护士工作站</Text>
+            </View>
+          </View>
+        )}
       </View>
     )
   }
@@ -156,17 +226,29 @@ const QueuePage: React.FC = () => {
           <Text className={styles.desc}>
             根据您填写的健康信息，需要护士先与您当面确认。请在座位上稍候，护士会很快过来与您沟通。
           </Text>
+          {hasRiskFlags && (
+            <View className={styles.riskList}>
+              <Text className={styles.riskTitle}>需要复核的事项：</Text>
+              {consultationData.riskFlags.map(flag => (
+                <Text key={flag} className={styles.riskItem}>
+                  • {riskFlagLabels[flag] || flag}
+                </Text>
+              ))}
+            </View>
+          )}
           <View className={styles.actions}>
             <Button className={classnames(styles.actionBtn, styles.call)} onClick={handleCallNurse}>
               <Text>🔔</Text>
               <Text className={styles.actionText}>呼叫护士</Text>
             </Button>
-            <Button className={classnames(styles.actionBtn, styles.test)} onClick={() => setShowDebug(!showDebug)}>
-              <Text>🧪</Text>
-              <Text className={styles.actionText}>模拟通过</Text>
-            </Button>
+            {__DEV__ && (
+              <Button className={classnames(styles.actionBtn, styles.test)} onClick={() => setShowNurseDebug(!showNurseDebug)}>
+                <Text>🧪</Text>
+                <Text className={styles.actionText}>模拟处理</Text>
+              </Button>
+            )}
           </View>
-          {showDebug && (
+          {__DEV__ && showNurseDebug && (
             <View style={{ marginTop: '24rpx', display: 'flex', gap: '16rpx', justifyContent: 'center', flexWrap: 'wrap' }}>
               <Button
                 style={{
@@ -271,6 +353,16 @@ const QueuePage: React.FC = () => {
               <Text className={styles.waitLabel}>所在楼层</Text>
             </View>
           </View>
+          {queueInfo.arriveProgress && queueInfo.arriveProgress !== 'not_started' && (
+            <View className={styles.arriveHint}>
+              <Text className={styles.arriveHintIcon}>🚶</Text>
+              <Text className={styles.arriveHintText}>
+                {queueInfo.arriveProgress === 'at_elevator' && '您已到达电梯口'}
+                {queueInfo.arriveProgress === 'at_floor' && `您已到达${queueInfo.floor}`}
+                {queueInfo.arriveProgress === 'at_room' && '您已到达诊室门口，咨询师很快会请您进入'}
+              </Text>
+            </View>
+          )}
         </View>
       )}
 
@@ -315,13 +407,13 @@ const QueuePage: React.FC = () => {
         </View>
       )}
 
-      {__DEV__ && queueInfo && !isNursePending && (
+      {__DEV__ && (
         <View
           style={{
             background: '#f5f5f5',
             borderRadius: '16rpx',
             padding: '24rpx',
-            marginBottom: '32rpx'
+            marginBottom: '100rpx'
           }}
         >
           <Text
@@ -333,42 +425,78 @@ const QueuePage: React.FC = () => {
               fontWeight: 500
             }}
           >
-            🔧 状态模拟（仅开发环境）
+            🔧 开发环境调试入口
           </Text>
-          <View style={{ display: 'flex', flexWrap: 'wrap', gap: '12rpx' }}>
-            {(['waiting', 'almost', 'called', 'consulting', 'done'] as QueueStatus[]).map(s => (
+          {queueInfo && (
+            <>
+              <Text style={{ fontSize: '22rpx', color: '#888', marginBottom: '12rpx', display: 'block' }}>
+                状态模拟：
+              </Text>
+              <View style={{ display: 'flex', flexWrap: 'wrap', gap: '12rpx', marginBottom: '16rpx' }}>
+                {(['waiting', 'almost', 'called', 'consulting', 'done'] as QueueStatus[]).map(s => (
+                  <Button
+                    key={s}
+                    style={{
+                      height: '56rpx',
+                      padding: '0 20rpx',
+                      background: queueInfo.status === s ? '#FF6B9D' : '#fff',
+                      border: `2rpx solid ${queueInfo.status === s ? '#FF6B9D' : '#ddd'}`,
+                      borderRadius: '28rpx',
+                      fontSize: '22rpx',
+                      color: queueInfo.status === s ? '#fff' : '#666'
+                    }}
+                    onClick={() => handleSimulateStatus(s)}
+                  >
+                    {statusDisplay[s]?.label}
+                  </Button>
+                ))}
+              </View>
               <Button
-                key={s}
                 style={{
                   height: '56rpx',
-                  padding: '0 20rpx',
-                  background: queueInfo.status === s ? '#FF6B9D' : '#fff',
-                  border: `2rpx solid ${queueInfo.status === s ? '#FF6B9D' : '#ddd'}`,
+                  padding: '0 24rpx',
+                  background: '#fff',
+                  border: '2rpx solid #FFB6C1',
                   borderRadius: '28rpx',
                   fontSize: '22rpx',
-                  color: queueInfo.status === s ? '#fff' : '#666'
+                  color: '#FF6B9D'
                 }}
-                onClick={() => handleSimulateStatus(s)}
+                onClick={handleGetQueue}
               >
-                {statusDisplay[s]?.label}
+                🔄 重新获取新号
               </Button>
-            ))}
+            </>
+          )}
+          <View style={{ display: 'flex', gap: '12rpx', marginTop: '16rpx' }}>
+            <Button
+              style={{
+                flex: 1,
+                height: '64rpx',
+                background: '#E6F4FF',
+                border: '2rpx solid #91CAFF',
+                borderRadius: '32rpx',
+                fontSize: '24rpx',
+                color: '#1677FF'
+              }}
+              onClick={handleOpenBoard}
+            >
+              📊 打开导诊看板
+            </Button>
+            <Button
+              style={{
+                flex: 1,
+                height: '64rpx',
+                background: '#FFF7E6',
+                border: '2rpx solid #FFD591',
+                borderRadius: '32rpx',
+                fontSize: '24rpx',
+                color: '#D48806'
+              }}
+              onClick={handleOpenNurseStation}
+            >
+              �‍⚕️ 打开护士工作站
+            </Button>
           </View>
-          <Button
-            style={{
-              marginTop: '16rpx',
-              height: '56rpx',
-              padding: '0 24rpx',
-              background: '#fff',
-              border: '2rpx solid #FFB6C1',
-              borderRadius: '28rpx',
-              fontSize: '22rpx',
-              color: '#FF6B9D'
-            }}
-            onClick={handleGetQueue}
-          >
-            🔄 重新获取新号
-          </Button>
         </View>
       )}
     </View>

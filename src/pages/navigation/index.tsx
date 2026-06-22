@@ -3,23 +3,52 @@ import { View, Text, Image, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useConsultationStore } from '@/store/consultation'
 import { navigationFloors, consultants, getFloorMap } from '@/data/mock'
-import { MapPoint } from '@/types'
+import { MapPoint, NavStep, NavStepKey } from '@/types'
 import styles from './index.module.scss'
 import classnames from 'classnames'
 
 const NavigationPage: React.FC = () => {
-  const { queueInfo } = useConsultationStore()
+  const { queueInfo, updateArriveProgress } = useConsultationStore()
   const [viewFloor, setViewFloor] = useState<string>('')
+  const [showGuide, setShowGuide] = useState(false)
+  const [completedSteps, setCompletedSteps] = useState<NavStepKey[]>([])
+  const [currentStep, setCurrentStep] = useState<NavStepKey | null>(null)
 
   const targetRoom = queueInfo?.roomNumber || '305诊室'
   const targetFloor = queueInfo?.floor || '3楼'
   const consultantName = queueInfo?.consultantName || '李医生'
   const estimatedTime = queueInfo?.estimatedTime || '--:--'
+  const floorNum = parseInt(targetFloor) || 3
 
   const consultant = consultants.find(c => c.name === consultantName) || consultants[0]
 
   const displayFloor = viewFloor || targetFloor
   const floorMap = useMemo(() => getFloorMap(displayFloor, targetRoom), [displayFloor, targetRoom])
+
+  const navSteps: NavStep[] = useMemo(() => {
+    const steps: NavStep[] = []
+    if (floorNum !== 1) {
+      steps.push({
+        key: 'elevator',
+        title: '到达电梯口',
+        description: '请找到大厅左侧的电梯，按下上行按钮等候',
+        icon: '🛗'
+      })
+    }
+    steps.push({
+      key: 'floor',
+      title: `到达${targetFloor}`,
+      description: `出电梯后注意楼层指示牌，确认在${targetFloor}`,
+      icon: '🏢'
+    })
+    steps.push({
+      key: 'room',
+      title: `到达${targetRoom}门口`,
+      description: '请轻轻敲门，咨询师会请您进入',
+      icon: '🚪'
+    })
+    return steps
+  }, [floorNum, targetFloor, targetRoom])
 
   const handleCallConsultant = () => {
     Taro.showModal({
@@ -35,11 +64,50 @@ const NavigationPage: React.FC = () => {
   }
 
   const handleStartGuide = () => {
-    Taro.showToast({ title: '导航功能开发中', icon: 'none' })
+    setShowGuide(true)
+    setCompletedSteps([])
+    if (navSteps.length > 0) {
+      setCurrentStep(navSteps[0].key)
+    }
     console.log('[Navigation] 开始室内导航，前往:', targetFloor, targetRoom)
   }
 
-  const floorNum = parseInt(targetFloor) || 3
+  const handleCloseGuide = () => {
+    setShowGuide(false)
+    setCurrentStep(null)
+  }
+
+  const handleStepConfirm = (stepKey: NavStepKey) => {
+    const newCompleted = [...completedSteps, stepKey]
+    setCompletedSteps(newCompleted)
+    updateArriveProgress(stepKey)
+
+    const currentIdx = navSteps.findIndex(s => s.key === stepKey)
+    if (currentIdx < navSteps.length - 1) {
+      const next = navSteps[currentIdx + 1]
+      setCurrentStep(next.key)
+      Taro.showToast({ title: '已确认到达', icon: 'success' })
+      if (next.key === 'floor') {
+        setViewFloor(targetFloor)
+      }
+    } else {
+      setCurrentStep(null)
+      Taro.showModal({
+        title: '到达确认',
+        content: `您已到达${targetRoom}门口，是否已进入面诊？`,
+        confirmText: '已进入',
+        cancelText: '还在门口',
+        success: (res) => {
+          if (res.confirm) {
+            Taro.showToast({ title: '请与咨询师沟通', icon: 'success' })
+            setTimeout(() => {
+              Taro.switchTab({ url: '/pages/queue/index' })
+            }, 800)
+          }
+        }
+      })
+    }
+  }
 
   const generateRouteSteps = () => {
     const steps = []
@@ -101,6 +169,9 @@ const NavigationPage: React.FC = () => {
     }
   }
 
+  const isStepCompleted = (key: NavStepKey) => completedSteps.includes(key)
+  const isStepCurrent = (key: NavStepKey) => currentStep === key
+
   if (!queueInfo) {
     return (
       <View className={styles.pageContainer}>
@@ -142,6 +213,69 @@ const NavigationPage: React.FC = () => {
         </View>
       </View>
 
+      {showGuide && (
+        <View className={styles.guidePanel}>
+          <View className={styles.guideHeader}>
+            <View>
+              <Text className={styles.guideTitle}>🧭 导航进行中</Text>
+              <Text className={styles.guideProgress}>
+                已完成 {completedSteps.length} / {navSteps.length} 步
+              </Text>
+            </View>
+            <View className={styles.closeGuideBtn} onClick={handleCloseGuide}>
+              <Text style={{ color: '#999', fontSize: '32rpx' }}>×</Text>
+            </View>
+          </View>
+
+          <View className={styles.guideSteps}>
+            {navSteps.map((step, idx) => {
+              const done = isStepCompleted(step.key)
+              const active = isStepCurrent(step.key)
+              return (
+                <View
+                  key={step.key}
+                  className={classnames(styles.guideStep, {
+                    [styles.stepDone]: done,
+                    [styles.stepActive]: active
+                  })}
+                >
+                  <View className={styles.stepIconWrap}>
+                    <Text className={styles.stepIconEmoji}>
+                      {done ? '✅' : active ? step.icon : '⬜'}
+                    </Text>
+                    {idx < navSteps.length - 1 && (
+                      <View className={classnames(styles.connector, {
+                        [styles.connectorDone]: done
+                      })} />
+                    )}
+                  </View>
+                  <View className={styles.stepBody}>
+                    <Text className={styles.guideStepTitle}>
+                      {step.title}
+                    </Text>
+                    <Text className={styles.guideStepDesc}>{step.description}</Text>
+                    {active && (
+                      <Button
+                        className={styles.confirmArriveBtn}
+                        onClick={() => handleStepConfirm(step.key)}
+                      >
+                        <Text>✓</Text>
+                        <Text className={styles.confirmArriveText}>
+                          我已到达这里
+                        </Text>
+                      </Button>
+                    )}
+                    {done && (
+                      <Text className={styles.doneBadge}>已确认到达</Text>
+                    )}
+                  </View>
+                </View>
+              )
+            })}
+          </View>
+        </View>
+      )}
+
       <View className={styles.mapSection}>
         <Text className={styles.sectionTitle}>楼层地图</Text>
 
@@ -182,7 +316,12 @@ const NavigationPage: React.FC = () => {
             {floorMap.points.map((point) => (
               <View
                 key={point.id}
-                className={classnames(styles.mapPoint, styles[`point-${point.type}`])}
+                className={classnames(styles.mapPoint, styles[`point-${point.type}`], {
+                  [styles.pulseHint]: showGuide && (
+                    (point.type === 'elevator' && isStepCurrent('elevator')) ||
+                    (point.type === 'target' && isStepCurrent('room'))
+                  )
+                })}
                 style={{
                   left: `${point.x}%`,
                   top: `${point.y}%`
@@ -245,9 +384,11 @@ const NavigationPage: React.FC = () => {
           <Text>📞</Text>
           <Text className={styles.callButtonText}>呼叫{consultant.name}</Text>
         </Button>
-        <Button className={styles.guideButton} onClick={handleStartGuide}>
-          <Text>🧭</Text>
-          <Text className={styles.guideButtonText}>开始导航</Text>
+        <Button className={classnames(styles.guideButton, { [styles.guideActive]: showGuide })} onClick={showGuide ? handleCloseGuide : handleStartGuide}>
+          <Text>{showGuide ? '⏹️' : '🧭'}</Text>
+          <Text className={styles.guideButtonText}>
+            {showGuide ? '结束导航' : '开始导航'}
+          </Text>
         </Button>
       </View>
     </View>

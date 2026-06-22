@@ -45,6 +45,8 @@ export interface QueueInfo {
   estimatedTime: string
   nurseReviewResult?: 'pending' | 'approved' | 'postponed'
   nurseNote?: string
+  checkInTime?: string
+  arriveProgress?: 'not_started' | 'at_elevator' | 'at_floor' | 'at_room'
 }
 
 export interface OptionItem {
@@ -71,4 +73,27 @@ export interface MapPoint {
 export interface FloorMap {
   floor: string
   points: MapPoint[]
+}
+
+export interface BoardCustomer {
+  id: string
+  queueNumber: string
+  name: string
+  status: QueueStatus
+  consultantName: string
+  roomNumber: string
+  floor: string
+  checkInTime: string
+  riskFlags: string[]
+  nurseNote?: string
+  phone?: string
+}
+
+export type NavStepKey = 'elevator' | 'floor' | 'room'
+
+export interface NavStep {
+  key: NavStepKey
+  title: string
+  description: string
+  icon: string
 }

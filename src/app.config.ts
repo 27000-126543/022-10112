@@ -6,7 +6,9 @@ export default defineAppConfig({
     'pages/privacy/index',
     'pages/consultation/index',
     'pages/risk/index',
-    'pages/navigation/index'
+    'pages/navigation/index',
+    'pages/board/index',
+    'pages/nurse/index'
   ],
   window: {
     backgroundTextStyle: 'light',

@@ -1,0 +1,473 @@
+@use '@/styles/variables.scss' as *;
+
+.pageContainer {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFE6EC 0%, #FFF5F7 30%);
+  padding-bottom: 60rpx;
+  box-sizing: border-box;
+}
+
+.navHeader {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md $page-padding;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 230, 236, 0.95);
+  backdrop-filter: blur(10rpx);
+}
+
+.backBtn {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-round;
+  background: $color-bg-card;
+  box-shadow: $shadow-card;
+  margin-right: $spacing-md;
+}
+
+.backIcon {
+  font-size: 36rpx;
+}
+
+.headerTitle {
+  flex: 1;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  text-align: center;
+  margin-right: 64rpx;
+}
+
+.statsSection {
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-lg;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-sm;
+}
+
+.statCard {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-md $spacing-sm;
+  text-align: center;
+  box-shadow: $shadow-card;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6rpx;
+  }
+
+  &.checked_in::before {
+    background: linear-gradient(90deg, #FF6B9D, #FF8E53);
+  }
+
+  &.nurse_pending::before {
+    background: linear-gradient(90deg, #FF7D00, #FFA940);
+  }
+
+  &.waiting::before {
+    background: linear-gradient(90deg, #1677FF, #69B1FF);
+  }
+
+  &.called::before {
+    background: linear-gradient(90deg, #FF6B9D, #FFB6C1);
+  }
+
+  &.consulting::before {
+    background: linear-gradient(90deg, #00B42A, #7CB342);
+  }
+}
+
+.statIcon {
+  font-size: 36rpx;
+  display: block;
+  margin-bottom: $spacing-xs;
+}
+
+.statValue {
+  font-size: 48rpx;
+  font-weight: $font-weight-bold;
+  display: block;
+  line-height: 1.2;
+
+  .checked_in & {
+    color: #FF6B9D;
+  }
+
+  .nurse_pending & {
+    color: #FF7D00;
+  }
+
+  .waiting & {
+    color: #1677FF;
+  }
+
+  .called & {
+    color: #FF6B9D;
+  }
+
+  .consulting & {
+    color: #00B42A;
+  }
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  display: block;
+  margin-top: 4rpx;
+}
+
+.tabsSection {
+  padding: 0 $page-padding;
+  margin-bottom: $spacing-md;
+}
+
+.tabsScroll {
+  white-space: nowrap;
+  overflow-x: auto;
+  padding-bottom: $spacing-sm;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabItem {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-lg;
+  margin-right: $spacing-sm;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  border: 2rpx solid transparent;
+  transition: all $transition-fast;
+
+  &.active {
+    background: linear-gradient(135deg, #FF6B9D 0%, #FF8E53 100%);
+    border-color: transparent;
+    box-shadow: 0 4rpx 12rpx rgba(255, 107, 157, 0.3);
+  }
+}
+
+.tabText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+
+  .active & {
+    color: $color-text-white;
+  }
+}
+
+.tabCount {
+  margin-left: $spacing-xs;
+  padding: 2rpx 12rpx;
+  border-radius: $radius-round;
+  background: $color-bg-light;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  font-weight: $font-weight-semibold;
+
+  .active & {
+    background: rgba(255, 255, 255, 0.25);
+    color: $color-text-white;
+  }
+}
+
+.listSection {
+  padding: 0 $page-padding;
+}
+
+.customerCard {
+  background: $color-bg-card;
+  border-radius: $radius-xl;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+}
+
+.cardHeader {
+  padding: $spacing-lg;
+  display: flex;
+  align-items: center;
+}
+
+.queueBadge {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: $radius-lg;
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8E53 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 157, 0.3);
+}
+
+.queuePrefix {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: $font-weight-medium;
+}
+
+.queueNum {
+  font-size: 32rpx;
+  color: $color-text-white;
+  font-weight: $font-weight-bold;
+  line-height: 1;
+}
+
+.cardInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+}
+
+.customerName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-right: $spacing-sm;
+}
+
+.statusTag {
+  padding: 4rpx 16rpx;
+  border-radius: $radius-round;
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
+
+  &.nurse_pending {
+    background: #FFF4E6;
+    color: #FF7D00;
+  }
+
+  &.waiting {
+    background: #E6F4FF;
+    color: #1677FF;
+  }
+
+  &.almost {
+    background: #FFF9E6;
+    color: #D48806;
+  }
+
+  &.called {
+    background: #FFE6EC;
+    color: #FF6B9D;
+  }
+
+  &.consulting {
+    background: #E6FFED;
+    color: #00B42A;
+  }
+
+  &.nurse_rejected {
+    background: #FFE8E8;
+    color: #F53F3F;
+  }
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.metaIcon {
+  font-size: 22rpx;
+}
+
+.expandBtn {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: $spacing-sm;
+  flex-shrink: 0;
+}
+
+.expandIcon {
+  font-size: 32rpx;
+  color: $color-text-tertiary;
+  transition: transform $transition-fast;
+
+  .expanded & {
+    transform: rotate(180deg);
+  }
+}
+
+.cardExpand {
+  padding: 0 $spacing-lg $spacing-lg;
+  border-top: 2rpx dashed $color-border;
+  padding-top: $spacing-lg;
+  margin-top: 0;
+}
+
+.detailSection {
+  margin-bottom: $spacing-md;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.detailTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.phoneRow {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-light;
+  border-radius: $radius-md;
+}
+
+.phoneIcon {
+  font-size: 28rpx;
+  margin-right: $spacing-sm;
+}
+
+.phoneText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+  letter-spacing: 2rpx;
+}
+
+.riskList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.riskTag {
+  padding: 6rpx 20rpx;
+  border-radius: $radius-round;
+  font-size: 22rpx;
+  background: #FFF0F0;
+  color: #F53F3F;
+  border: 2rpx solid #FFCCC7;
+  font-weight: $font-weight-medium;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 40rpx;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 10rpx;
+  top: 8rpx;
+  bottom: 8rpx;
+  width: 4rpx;
+  background: linear-gradient(180deg, #FF6B9D 0%, #FFE6EC 100%);
+  border-radius: 2rpx;
+}
+
+.timelineItem {
+  position: relative;
+  padding-bottom: $spacing-md;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.timelineDot {
+  position: absolute;
+  left: -34rpx;
+  top: 4rpx;
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: $radius-round;
+  background: $color-bg-card;
+  border: 4rpx solid #FF6B9D;
+  box-sizing: border-box;
+
+  .completed & {
+    background: #FF6B9D;
+  }
+
+  .pending & {
+    border-color: $color-text-disabled;
+  }
+}
+
+.timelineTime {
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.timelineText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+
+  .completed & {
+    color: $color-text-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 120rpx 0;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+  display: block;
+  margin-bottom: $spacing-lg;
+}
+
+.emptyTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: $spacing-sm;
+}
+
+.emptyDesc {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  display: block;
+}

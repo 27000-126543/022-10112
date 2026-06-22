@@ -292,6 +292,189 @@
   }
 }
 
+.pulseHint {
+  z-index: 5;
+  .mapPointMarker {
+    animation: pulseMarker 1.2s infinite;
+  }
+  .mapPointLabel {
+    font-weight: 700;
+  }
+}
+
+@keyframes pulseMarker {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.12);
+  }
+  50% {
+    transform: scale(1.25);
+    box-shadow: 0 8rpx 24rpx rgba(255, 107, 157, 0.4);
+  }
+}
+
+.guidePanel {
+  background: linear-gradient(135deg, #E6F7FF 0%, #FFF0F6 100%);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  border: 2rpx solid #91D5FF;
+  box-shadow: 0 8rpx 24rpx rgba(24, 144, 255, 0.1);
+}
+
+.guideHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.guideTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  color: #1677FF;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.guideProgress {
+  font-size: $font-size-xs;
+  color: #69B1FF;
+}
+
+.closeGuideBtn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-round;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guideSteps {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.guideStep {
+  display: flex;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: $radius-lg;
+  border: 2rpx solid transparent;
+  transition: all $transition-base;
+
+  &.stepDone {
+    opacity: 0.8;
+    background: rgba(246, 255, 237, 0.9);
+    border-color: #B7EB8F;
+  }
+
+  &.stepActive {
+    background: rgba(255, 255, 255, 1);
+    border-color: $color-primary;
+    box-shadow: 0 4rpx 16rpx rgba(255, 107, 157, 0.15);
+  }
+}
+
+.stepIconWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.stepIconEmoji {
+  font-size: 44rpx;
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-round;
+  background: $color-bg-card;
+}
+
+.stepBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.guideStepTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  display: block;
+  margin-bottom: 4rpx;
+
+  .stepDone & {
+    color: #389E0D;
+  }
+
+  .stepActive & {
+    color: $color-primary;
+  }
+}
+
+.guideStepDesc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  display: block;
+  margin-bottom: $spacing-sm;
+  line-height: 1.5;
+}
+
+.connector {
+  width: 4rpx;
+  flex: 1;
+  min-height: 24rpx;
+  background: $color-divider;
+  margin-top: $spacing-xs;
+  border-radius: 2rpx;
+
+  &.connectorDone {
+    background: #95DE64;
+  }
+}
+
+.confirmArriveBtn {
+  @include button-reset;
+  display: inline-flex;
+  height: 64rpx;
+  padding: 0 $spacing-lg;
+  background: $color-primary-gradient;
+  border-radius: $radius-button;
+  align-items: center;
+  gap: $spacing-xs;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 157, 0.25);
+}
+
+.confirmArriveText {
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  font-weight: $font-weight-semibold;
+}
+
+.doneBadge {
+  display: inline-block;
+  padding: 4rpx $spacing-sm;
+  background: #F6FFED;
+  border: 2rpx solid #B7EB8F;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  color: #389E0D;
+  font-weight: $font-weight-medium;
+}
+
+.guideActive {
+  background: linear-gradient(135deg, #52C41A 0%, #389E0D 100%) !important;
+  box-shadow: 0 4rpx 16rpx rgba(82, 196, 26, 0.3) !important;
+}
+
 .mapPathLine {
   position: absolute;
   top: $spacing-sm;

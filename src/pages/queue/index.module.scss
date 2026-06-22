@@ -60,6 +60,29 @@
     display: block;
   }
 
+  .riskList {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    margin-bottom: $spacing-lg;
+    text-align: left;
+  }
+
+  .riskTitle {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: $color-warning;
+    display: block;
+    margin-bottom: $spacing-xs;
+  }
+
+  .riskItem {
+    font-size: $font-size-xs;
+    color: #8B5A00;
+    display: block;
+    line-height: 1.8;
+  }
+
   .actions {
     display: flex;
     gap: $spacing-md;
@@ -566,6 +589,65 @@
   font-size: $font-size-md;
   font-weight: $font-weight-semibold;
   color: $color-text-white;
+}
+
+.arriveHint {
+  margin-top: $spacing-lg;
+  padding: $spacing-sm $spacing-md;
+  background: linear-gradient(135deg, #F0FFF4 0%, #E6FFE8 100%);
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  border: 2rpx solid #B7EB8F;
+}
+
+.arriveHintIcon {
+  font-size: 32rpx;
+  flex-shrink: 0;
+}
+
+.arriveHintText {
+  font-size: $font-size-xs;
+  color: #389E0D;
+  font-weight: $font-weight-medium;
+  line-height: 1.5;
+}
+
+.devEntryBar {
+  position: fixed;
+  bottom: 32rpx;
+  left: 32rpx;
+  right: 32rpx;
+  display: flex;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $radius-xl;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10rpx);
+}
+
+.devEntryBtn {
+  flex: 1;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  background: $color-bg-light;
+  border-radius: $radius-button;
+  border: 2rpx solid $color-border-light;
+}
+
+.devEntryIcon {
+  font-size: 32rpx;
+}
+
+.devEntryText {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
 }
 
 @keyframes pulse {
