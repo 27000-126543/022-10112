@@ -3,8 +3,10 @@ import { View, Text, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import classnames from 'classnames'
 import { useConsultationStore } from '@/store/consultation'
-import { riskQuestions, mockQueueInfo } from '@/data/mock'
+import { riskQuestions, generateQueueInfo } from '@/data/mock'
 import styles from './index.module.scss'
+
+const nurseReviewFlags = ['pregnant', 'breastfeeding', 'allergy', 'scar', 'disease', 'surgery']
 
 const RiskPage: React.FC = () => {
   const { consultationData, setConsultationData, setQueueInfo, setCurrentStep } = useConsultationStore()
@@ -45,7 +47,27 @@ const RiskPage: React.FC = () => {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index))
   }
 
-  const hasHighRisk = answers.pregnant || answers.breastfeeding || answers.scar
+  const checkNeedNurseReview = (): boolean => {
+    for (const flag of nurseReviewFlags) {
+      if (answers[flag] === true) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const hasHighRisk = checkNeedNurseReview()
+
+  const getRiskSummaryText = (): string => {
+    const activeRisks: string[] = []
+    if (answers.pregnant) activeRisks.push('孕期/备孕期')
+    if (answers.breastfeeding) activeRisks.push('哺乳期')
+    if (answers.allergy) activeRisks.push('过敏史')
+    if (answers.scar) activeRisks.push('疤痕体质')
+    if (answers.disease) activeRisks.push('慢性疾病')
+    if (answers.surgery) activeRisks.push('半年内医美手术')
+    return activeRisks.join('、')
+  }
 
   const handleSubmit = () => {
     const riskFlags: string[] = []
@@ -66,20 +88,23 @@ const RiskPage: React.FC = () => {
       isPregnant: answers.pregnant,
       isBreastfeeding: answers.breastfeeding,
       hasAllergy: answers.allergy,
-      uploadedFiles: uploadedFiles.length
+      hasScar: answers.scar,
+      hasDisease: answers.disease,
+      hasRecentSurgery: answers.surgery,
+      needNurseReview: hasHighRisk
     })
 
-    const queueData = {
-      ...mockQueueInfo,
-      needNurseReview: hasHighRisk
-    }
+    const queueData = generateQueueInfo(hasHighRisk)
     setQueueInfo(queueData)
     setCurrentStep(5)
 
+    console.log('[Risk] 生成排队信息:', queueData)
+
     if (hasHighRisk) {
+      const riskSummary = getRiskSummaryText()
       Taro.showModal({
-        title: '温馨提示',
-        content: '根据您填写的信息，有部分情况需要护士先进行复核，我们会尽快安排护士与您确认。',
+        title: '需要护士复核',
+        content: `根据您填写的情况（${riskSummary}），为了确保您的安全，我们需要先安排护士与您进行当面复核确认。请您在座位上稍候，护士会很快过来与您沟通。`,
         showCancel: false,
         confirmText: '我知道了',
         success: () => {
@@ -100,11 +125,6 @@ const RiskPage: React.FC = () => {
 
   const handlePrev = () => {
     Taro.navigateBack()
-  }
-
-  const getRiskLevel = (questionId: string) => {
-    const question = riskQuestions.find(q => q.id === questionId)
-    return question?.riskLevel || 'low'
   }
 
   return (
@@ -184,9 +204,9 @@ const RiskPage: React.FC = () => {
 
       {hasHighRisk && (
         <View className={styles.summaryCard}>
-          <Text className={styles.summaryTitle}>📋 风险提示</Text>
+          <Text className={styles.summaryTitle}>📋 护士复核提醒</Text>
           <Text className={styles.summaryText}>
-            根据您填写的信息，存在需要特别注意的情况。我们会安排护士先与您进行复核，确认无误后再安排面诊。请稍候。
+            根据您填写的情况（{getRiskSummaryText()}），需要先由护士当面复核确认。请您稍候，护士会很快过来与您沟通。
           </Text>
         </View>
       )}

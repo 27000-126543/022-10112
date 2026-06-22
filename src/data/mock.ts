@@ -45,7 +45,7 @@ export const riskQuestions = [
     id: 'breastfeeding',
     question: '您是否处于哺乳期？',
     tip: '哺乳期部分项目需要暂缓',
-    riskLevel: 'medium'
+    riskLevel: 'high'
   },
   {
     id: 'allergy',
@@ -69,20 +69,18 @@ export const riskQuestions = [
     id: 'surgery',
     question: '近半年内是否做过其他医美手术？',
     tip: '频繁医美可能增加皮肤负担',
-    riskLevel: 'low'
+    riskLevel: 'medium'
   }
 ]
 
-export const mockQueueInfo: QueueInfo = {
-  queueNumber: 'A023',
-  waitTime: 25,
-  consultantName: '李医生',
-  consultantAvatar: 'https://picsum.photos/id/64/200/200',
-  roomNumber: '305诊室',
-  floor: '3楼',
-  status: 'waiting',
-  needNurseReview: false,
-  estimatedTime: '15:30'
+export const validAppointmentCodes: Record<string, { name: string; phone: string }> = {
+  'YM20240001': { name: '张女士', phone: '13800138001' },
+  'YM20240002': { name: '李女士', phone: '13800138002' },
+  'YM20240003': { name: '王女士', phone: '13800138003' },
+  'YM20240004': { name: '赵女士', phone: '13800138004' },
+  'YM20240005': { name: '陈女士', phone: '13800138005' },
+  'TEST001': { name: '测试用户', phone: '13900000001' },
+  'TEST002': { name: '测试用户2', phone: '13900000002' }
 }
 
 export const consultants = [
@@ -106,8 +104,62 @@ export const consultants = [
     title: '整形外科医师',
     specialty: '五官整形、形体雕塑',
     avatar: 'https://picsum.photos/id/177/200/200'
+  },
+  {
+    id: '4',
+    name: '刘医生',
+    title: '皮肤管理专家',
+    specialty: '色斑治疗、痘坑修复',
+    avatar: 'https://picsum.photos/id/338/200/200'
+  },
+  {
+    id: '5',
+    name: '陈医生',
+    title: '抗衰老医师',
+    specialty: '紧致提拉、年轻化综合方案',
+    avatar: 'https://picsum.photos/id/1027/200/200'
   }
 ]
+
+export const rooms = [
+  { floor: '3楼', number: '301诊室' },
+  { floor: '3楼', number: '302诊室' },
+  { floor: '3楼', number: '303诊室' },
+  { floor: '3楼', number: '305诊室' },
+  { floor: '2楼', number: '201诊室' },
+  { floor: '2楼', number: '203诊室' },
+  { floor: '4楼', number: '402诊室' }
+]
+
+const prefixList = ['A', 'B', 'C', 'D']
+
+export const generateQueueInfo = (needNurseReview: boolean = false): QueueInfo => {
+  const prefix = prefixList[Math.floor(Math.random() * prefixList.length)]
+  const number = String(Math.floor(Math.random() * 90) + 10).padStart(2, '0')
+  const queueNumber = `${prefix}${number}`
+
+  const waitTime = Math.floor(Math.random() * 30) + 10
+
+  const consultant = consultants[Math.floor(Math.random() * consultants.length)]
+
+  const room = rooms[Math.floor(Math.random() * rooms.length)]
+
+  const now = new Date()
+  now.setMinutes(now.getMinutes() + waitTime)
+  const estimatedTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
+
+  return {
+    queueNumber,
+    waitTime,
+    consultantName: consultant.name,
+    consultantAvatar: consultant.avatar,
+    roomNumber: room.number,
+    floor: room.floor,
+    status: 'waiting',
+    needNurseReview,
+    estimatedTime
+  }
+}
 
 export const navigationFloors = [
   {
@@ -118,7 +170,7 @@ export const navigationFloors = [
   {
     floor: '2楼',
     description: '皮肤护理、检测中心',
-    rooms: ['皮肤检测室', '护理室', '光子治疗室']
+    rooms: ['皮肤检测室', '护理室', '光子治疗室', '201诊室', '203诊室']
   },
   {
     floor: '3楼',
@@ -128,6 +180,6 @@ export const navigationFloors = [
   {
     floor: '4楼',
     description: '手术中心、术后恢复',
-    rooms: ['手术室1', '手术室2', '恢复室']
+    rooms: ['402诊室', '手术室1', '手术室2', '恢复室']
   }
 ]

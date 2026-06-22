@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Image, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useConsultationStore } from '@/store/consultation'
-import { mockQueueInfo, consultants } from '@/data/mock'
+import { generateQueueInfo, consultants } from '@/data/mock'
 import styles from './index.module.scss'
 import classnames from 'classnames'
 
@@ -14,10 +14,7 @@ const QueuePage: React.FC = () => {
     consultationData.isBreastfeeding
 
   const handleGetQueue = () => {
-    const queueData = {
-      ...mockQueueInfo,
-      needNurseReview: hasRiskFlags
-    }
+    const queueData = generateQueueInfo(hasRiskFlags)
     setQueueInfo(queueData)
     console.log('[Queue] 获取排队信息:', queueData)
   }

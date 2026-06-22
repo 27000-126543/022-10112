@@ -170,6 +170,10 @@
   background: $color-success;
   margin-right: 8rpx;
   vertical-align: middle;
+
+  &.statusDotInactive {
+    background: $color-text-disabled;
+  }
 }
 
 .tipsSection {
